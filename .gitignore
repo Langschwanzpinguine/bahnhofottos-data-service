@@ -42,5 +42,5 @@ utils/__pycache__/
 # Exclude any backup or temporary files
 *~
 
-data/*
-!data/.gitkeep
+data/osm_data/*
+!data/osm_data/.gitkeep

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from utils.refresh_countries import update_countries
+from utils.refresh_countries import *
 
 app = Flask(__name__)
 
@@ -8,22 +8,53 @@ def refresh_all():
     print("refresh all")
     return '', 204
 
-@app.route('/refresh/countries', methods=['POST'])
+@app.route('/refresh/countries', methods=['POST']) # Expects a json body like {"countries" : ["CH", "DE"]}
 def refresh_countries():
-    print("Refresh country")
-    return '', 204
+    try:
+        data = request.get_json()
+        if 'countries' in data:
+            countries = data['countries']
+            update_countries_from_list(countries)
+            return '', 204
+        else:
+            return jsonify({"error": "Missing 'countries' in JSON body"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/refresh/all_countries', methods=['POST'])
 def refresh_all_countries():
     update_countries()
     return '', 204
 
-@app.route('/add_countries', methods=['POST'])
-def add_country():
-    update_countries()
+@app.route('/add_countries', methods=['POST']) #{"countries": ["AT"], refresh_now: boolean}
+def add_countries():
+    try:
+        data = request.get_json()
+        if 'countries' in data:
+            countries = data['countries']
+            add_countries_to_list(countries)
 
-    return '', 204
-    # For each country run refresh
+            if('refresh_now') in data and data['refresh_now']:
+                update_countries_from_list(countries)
+
+            return '', 204
+        else:
+            return jsonify({"error": "Missing 'countries' in JSON body"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/delete_countries', methods=['POST'])
+def delete_countries():
+    try:
+        data = request.get_json()
+        if 'countries' in data:
+            countries = data['countries']
+            delete_countries_from_list(countries)
+            return '', 204
+        else:
+            return jsonify({"error": "Missing 'countries' in JSON body"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     from waitress import serve
