@@ -1,6 +1,7 @@
 import json
 import requests
 import os
+import time
 from config import country_codes_file, countries_interest_file, data_directory
 
 def is_valid_country_code(country_code):
@@ -65,6 +66,8 @@ def update_countries_from_list(country_list):
             print(country + " is not a valid ISO 3166-1 country code")
             continue
         update_country(country)
+        time.sleep(10)
+        
 
 def update_countries():
     input_json_file_path = countries_interest_file

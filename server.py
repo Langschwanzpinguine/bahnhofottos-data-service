@@ -1,11 +1,21 @@
 from flask import Flask, request, jsonify
 from utils.refresh_countries import *
+from utils.refresh_total import *
+from utils.all_names import *
+import time
 
 app = Flask(__name__)
 
 @app.route('/refresh/all', methods=['POST'])
 def refresh_all():
-    print("refresh all")
+    print("Refreshing all data, this can take a while")
+    update_total_data()
+    print("Parsing global data into smaller files")
+    get_all_names()
+    get_unique_names()
+    time.sleep(10) # Sleeping for couple of seconds in fear of rate_limiting
+    print("Starting to fetch countries of interest")
+    update_countries()
     return '', 204
 
 @app.route('/refresh/countries', methods=['POST']) # Expects a json body like {"countries" : ["CH", "DE"]}
