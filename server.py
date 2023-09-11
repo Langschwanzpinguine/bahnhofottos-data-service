@@ -32,9 +32,15 @@ def refresh_countries():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/refresh/all_countries', methods=['POST'])
-def refresh_all_countries():
+def load_single_country():
     update_countries()
+    print("All countries refreshed")
     return '', 204
+
+@app.route('/load/<string:country_code>', methods=['POST'])
+def refresh_all_countries(country_code):
+    res = update_country(country_code)
+    return json.loads(res.text)
 
 @app.route('/add_countries', methods=['POST']) #{"countries": ["AT"], refresh_now: boolean}
 def add_countries():
@@ -68,4 +74,8 @@ def delete_countries():
 
 if __name__ == "__main__":
     from waitress import serve
+    host = "localhost"
+    port = 8080
+    print(f"Starting server on {host} port {port}")
+    print(f"http://{host}:{port}")
     serve(app, host="localhost", port=8080)

@@ -57,6 +57,8 @@ def update_country(country): #Assumes correct code
     else:
         print('POST request failed with status code:', response.status_code)
         print('Response:', response.text)
+    
+    return response
 
 def update_countries_from_list(country_list):
     unique_countries = list(set(country_list))
@@ -67,7 +69,7 @@ def update_countries_from_list(country_list):
             continue
         update_country(country)
         time.sleep(10)
-        
+   
 
 def update_countries():
     input_json_file_path = countries_interest_file
