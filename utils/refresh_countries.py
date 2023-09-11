@@ -72,6 +72,9 @@ def update_countries_from_list(country_list):
 def update_countries():
     input_json_file_path = countries_interest_file
 
+    if not os.path.exists(input_json_file_path):
+        return
+
     with open(input_json_file_path, 'r') as input_file:
         data = json.load(input_file)
 
@@ -81,6 +84,15 @@ def update_countries():
         print('The "countries" key does not exist in the JSON data.')
 
 def add_countries_to_list(countries):
+    print("GOT HERE")
+    if not os.path.exists(countries_interest_file):
+        initial_data = {'countries': []}
+        print("GOT HERE")
+        with open(countries_interest_file, 'w') as new_file:
+            json.dump(initial_data, new_file, indent=4)
+        print(f'File {countries_interest_file} was created.')
+    print("GOT HERE")
+
     try:
         with open(countries_interest_file, 'r') as file:
             data = json.load(file)
@@ -99,8 +111,6 @@ def add_countries_to_list(countries):
             json.dump(data, file, indent=4)
         
         return "Countries added successfully"
-    except FileNotFoundError:
-        return "countries_of_interest.json not found"
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
