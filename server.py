@@ -37,7 +37,7 @@ def load_single_country():
     print("All countries refreshed")
     return '', 204
 
-@app.route('/load/<string:country_code>', methods=['POST'])
+@app.route('/load/<string:country_code>', methods=['GET'])
 def refresh_all_countries(country_code):
     res = update_country(country_code)
     return json.loads(res.text)
