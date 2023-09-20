@@ -40,7 +40,7 @@ def load_single_country():
 @app.route('/load/<string:country_code>', methods=['GET'])
 def refresh_all_countries(country_code):
     res = update_country(country_code)
-    return json.loads(res.text)
+    return res
 
 @app.route('/add_countries', methods=['POST']) #{"countries": ["AT"], refresh_now: boolean}
 def add_countries():

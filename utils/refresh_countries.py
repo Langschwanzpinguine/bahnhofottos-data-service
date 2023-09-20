@@ -36,6 +36,7 @@ def update_country(country): #Assumes correct code
             );
         out;
     '''
+    json_data = ''
 
     url = "https://overpass-api.de/api/interpreter"
     headers = {'Content-Type': 'text/plain'}
@@ -50,6 +51,23 @@ def update_country(country): #Assumes correct code
             json_data = None
         
         if json_data:
+            unique_names = set()
+
+            # Create a list to store the filtered elements
+            filtered_elements = []
+
+            # Iterate through the elements and filter by unique names
+            for element in json_data['elements']:
+                if 'name' in element['tags']:
+                    name = element['tags']['name']
+                    if name not in unique_names:
+                        unique_names.add(name)
+                        filtered_elements.append(element)
+                else:
+                    filtered_elements.append(element)
+
+            # Update the 'elements' key in the data dictionary
+            json_data['elements'] = filtered_elements
             file_name = f'{data_directory}/country_data_{country}.json'
             with open(file_name, 'w') as json_file:
                 json.dump(json_data, json_file, indent=4)
@@ -58,7 +76,7 @@ def update_country(country): #Assumes correct code
         print('POST request failed with status code:', response.status_code)
         print('Response:', response.text)
     
-    return response
+    return json_data
 
 def update_countries_from_list(country_list):
     unique_countries = list(set(country_list))
