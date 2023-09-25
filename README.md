@@ -70,4 +70,4 @@ curl -X POST -H "Content-Type: application/json" -d '{"countries": ["DE"]}' http
 - Response: No content (HTTP status code 204).
 
 #### Notes
-Dont refresh the data at high frequecies
+Dont refresh the data at high frequencies
